@@ -1,0 +1,6 @@
+{
+  "id": "heliosFormEditor",
+  "name": "Helios Form Editor",
+  "srcdoc": "./index.html",
+  "fieldTypes": ["Object"]
+}
