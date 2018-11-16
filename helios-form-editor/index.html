@@ -8,6 +8,34 @@
       rel="stylesheet"
       href="https://unpkg.com/contentful-ui-extensions-sdk@3/dist/cf-extension.css"
     />
+    <style>
+      .jfe-table-cell,
+      .jfe-tab {
+        padding: 8px;
+      }
+
+      .cf-btn-secondary {
+        padding: 4px;
+        font-size: 12px;
+        margin: 4px;
+      }
+
+      .jfe-tab {
+        cursor: pointer;
+      }
+
+      .jfe-textarea-input {
+        font-size: 16px;
+        color: #2a3039;
+        font-family: "Avenir Next W01", Helvetica, sans-serif;
+        display: block;
+        width: 100%;
+        line-height: 1.5;
+        border: 1px solid #c3cfd5;
+        padding: 4px;
+        border-radius: 4px;
+      }
+    </style>
   </head>
 
   <body>
@@ -48,7 +76,7 @@
           }),
           getHeaderButtonHolder: "jfe-button-holder",
           getSelectInput: "cf-form-input",
-          getTextareaInput: "cf-form-input",
+          getTextareaInput: "cf-form-textarea",
           getSwitcher: function(options) {
             var el = this.getSelectInput(options);
             el.className += " jfe-switcher";
@@ -132,22 +160,82 @@
       // TODO: Make this configurable on Data Type level.
       /*eslint quotes: [2, "double"]*/
       window.CONTENTFUL_FORM_EDITOR_SCHEMA = {
-        title: "BuildDesignData",
+        title: "Repeatable Content",
         oneOf: [
           {
             $ref: "#/definitions/builddesigndata",
-            title: "BuildDesignData"
+            title: "Build Design Data"
+          },
+          {
+            $ref: "#/definitions/subnav",
+            title: "Sub Nav"
           }
         ],
         definitions: {
+          subnav: {
+            title: "Sub Nav",
+            type: "object",
+            id: "subNav",
+            properties: {
+              items: {
+                type: "array",
+                format: "tabs",
+                title: "Items",
+                uniqueItems: false,
+                items: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "string"
+                    },
+                    label: {
+                      type: "string"
+                    },
+                    items: {
+                      type: "array",
+                      format: "tabs",
+                      items: {
+                        type: "object",
+                        properties: {
+                          label: {
+                            type: "string"
+                          },
+                          to: {
+                            type: "string"
+                          },
+                          offspring: {
+                            type: "array",
+                            format: "table",
+                            title: "Offspring",
+                            uniqueItems: false,
+                            items: {
+                              type: "object",
+                              properties: {
+                                label: {
+                                  type: "string"
+                                },
+                                to: {
+                                  type: "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
           builddesigndata: {
-            title: "BuildDesignData",
+            title: "Build Design Data",
             type: "object",
             id: "buildData",
             properties: {
               content: {
                 type: "array",
-                format: "table",
+                format: "tabs",
                 title: "Content",
                 uniqueItems: true,
                 items: {
@@ -157,7 +245,8 @@
                       type: "string"
                     },
                     copy: {
-                      type: "string"
+                      type: "string",
+                      format: "textarea"
                     }
                   }
                 }
